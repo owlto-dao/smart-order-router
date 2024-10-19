@@ -57,7 +57,7 @@
     "mnemonist": "^0.38.3",
     "node-cache": "^5.1.2",
     "stats-lite": "^2.2.0",
-    "@ethersproject/providers": "^5.4.0",
+    "@ethersproject/providers": "5.4.0",
     "jsbi": "3.2.5"
   },
   "devDependencies": {
