@@ -5,7 +5,7 @@ import { Protocol, SwapRouter, Trade, ZERO } from '@uniswap/router-sdk';
 import {
   ChainId,
   Currency,
-  Fraction,
+  Fraction, Percent,
   Token,
   TradeType
 } from '@uniswap/sdk-core';
@@ -1082,6 +1082,19 @@ export class AlphaRouter
     };
   }
 
+  public async owltoRoure(
+    amount: CurrencyAmount,
+    quoteCurrency: Currency,
+    slippage: number,
+    tradeType: TradeType,
+    swapConfig?: SwapOptions,
+    partialRoutingConfig: Partial<AlphaRouterConfig> = {}
+  ): Promise<SwapRoute | null> {
+    if (swapConfig) {
+      swapConfig!.slippageTolerance = new Percent(slippage, 10000)
+    }
+    return this.route(amount, quoteCurrency, tradeType, swapConfig, partialRoutingConfig);
+  }
   /**
    * @inheritdoc IRouter
    */
@@ -1094,6 +1107,10 @@ export class AlphaRouter
   ): Promise<SwapRoute | null> {
     const originalAmount = amount;
     partialRoutingConfig.protocols = [Protocol.V2, Protocol.V3]
+    if (swapConfig) {
+      swapConfig.slippageTolerance = new Percent(5, 100)
+    }
+
     const { currencyIn,
       currencyOut } =
       this.determineCurrencyInOutFromTradeType(
