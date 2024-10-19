@@ -1082,7 +1082,7 @@ export class AlphaRouter
     };
   }
 
-  public async owltoRoure(
+  public async owltoRoute(
     amount: CurrencyAmount,
     quoteCurrency: Currency,
     slippage: number,
