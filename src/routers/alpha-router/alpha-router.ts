@@ -563,6 +563,7 @@ export class AlphaRouter
         case ChainId.BASE:
         case ChainId.BLAST:
         case ChainId.ZORA:
+        case ChainId.WORLDCHAIN:
         case ChainId.BASE_GOERLI:
           this.onChainQuoteProvider = new OnChainQuoteProvider(
             chainId,
@@ -1093,7 +1094,8 @@ export class AlphaRouter
   ): Promise<SwapRoute | null> {
     const originalAmount = amount;
     partialRoutingConfig.protocols = [Protocol.V2, Protocol.V3]
-    const { currencyIn, currencyOut } =
+    const { currencyIn,
+      currencyOut } =
       this.determineCurrencyInOutFromTradeType(
         tradeType,
         amount,

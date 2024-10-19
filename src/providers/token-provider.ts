@@ -1001,6 +1001,8 @@ export const USDC_ON = (chainId: ChainId): Token => {
       return USDC_ZORA;
     case ChainId.ZKSYNC:
       return USDCE_ZKSYNC;
+    case ChainId.WORLDCHAIN:
+      return USDC_WORLDCHAIN;
     default:
       throw new Error(`Chain id: ${chainId} not supported`);
   }
