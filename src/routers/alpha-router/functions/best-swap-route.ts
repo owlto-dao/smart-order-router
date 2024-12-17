@@ -69,6 +69,7 @@ export async function getBestSwapRoute(
   // Build a map of percentage of the input to list of valid quotes.
   // Quotes can be null for a variety of reasons (not enough liquidity etc), so we drop them here too.
   const percentToQuotes: { [percent: number]: RouteWithValidQuote[] } = {};
+  console.log("routesWithValidQuotes ", routesWithValidQuotes.length)
   for (const routeWithValidQuote of routesWithValidQuotes) {
     if (!percentToQuotes[routeWithValidQuote.percent]) {
       percentToQuotes[routeWithValidQuote.percent] = [];
@@ -82,6 +83,7 @@ export async function getBestSwapRoute(
     MetricLoggerUnit.Milliseconds
   );
 
+  console.time("getBestSwapRouteBy")
   // Given all the valid quotes for each percentage find the optimal route.
   const swapRoute = await getBestSwapRouteBy(
     routeType,
@@ -96,7 +98,7 @@ export async function getBestSwapRoute(
     swapConfig,
     providerConfig
   );
-
+  console.timeEnd("getBestSwapRouteBy")
   // It is possible we were unable to find any valid route given the quotes.
   if (!swapRoute) {
     return null;
