@@ -1097,11 +1097,13 @@ export class AlphaRouter
     const tokenIn = currencyIn.wrapped;
     const tokenOut = currencyOut.wrapped;
 
+    console.time("tokenOutProperties");
     const tokenOutProperties =
       await this.tokenPropertiesProvider.getTokensProperties(
         [tokenOut],
         partialRoutingConfig
       );
+    console.timeEnd("tokenOutProperties");
 
     const feeTakenOnTransfer =
       tokenOutProperties[tokenOut.address.toLowerCase()]?.tokenFeeResult
@@ -1193,11 +1195,14 @@ export class AlphaRouter
       log.warn(`Finalized routing config is ${JSON.stringify(routingConfig)}`);
     }
 
+    console.time("gesPriceWei");
     const gasPriceWei = await this.getGasPriceWei(
       await blockNumber,
       await partialRoutingConfig.blockNumber
     );
+    console.timeEnd("gesPriceWei");
 
+    console.time("gasToken");
     const quoteToken = quoteCurrency.wrapped;
     // const gasTokenAccessor = await this.tokenProvider.getTokens([routingConfig.gasToken!]);
     const gasToken = routingConfig.gasToken
@@ -1205,6 +1210,7 @@ export class AlphaRouter
           await this.tokenProvider.getTokens([routingConfig.gasToken])
         ).getTokenByAddress(routingConfig.gasToken)
       : undefined;
+    console.timeEnd("gasToken");
 
     const providerConfig: GasModelProviderConfig = {
       ...routingConfig,
@@ -1219,6 +1225,7 @@ export class AlphaRouter
       feeTakenOnTransfer,
     };
 
+    console.time("getGasModels");
     const {
       v2GasModel: v2GasModel,
       v3GasModel: v3GasModel,
@@ -1229,6 +1236,7 @@ export class AlphaRouter
       quoteToken,
       providerConfig
     );
+    console.timeEnd("getGasModels");
 
     // Create a Set to sanitize the protocols input, a Set of undefined becomes an empty set,
     // Then create an Array from the values of that Set.
@@ -1236,6 +1244,7 @@ export class AlphaRouter
       new Set(routingConfig.protocols).values()
     );
 
+    console.time("cacheMode");
     const cacheMode =
       routingConfig.overwriteCacheMode ??
       (await this.routeCachingProvider?.getCacheMode(
@@ -1245,6 +1254,7 @@ export class AlphaRouter
         tradeType,
         protocols
       ));
+    console.timeEnd("cacheMode");
 
     // Fetch CachedRoutes
     let cachedRoutes: CachedRoutes | undefined;
@@ -1360,10 +1370,12 @@ export class AlphaRouter
       );
     }
 
+    console.time("swapRouteFromCache, swapRouteFromChain")
     const [swapRouteFromCache, swapRouteFromChain] = await Promise.all([
       swapRouteFromCachePromise,
       swapRouteFromChainPromise,
     ]);
+    console.timeEnd("swapRouteFromCache, swapRouteFromChain")
 
     let swapRouteRaw: BestSwapRoute | null;
     let hitsCachedRoute = false;
