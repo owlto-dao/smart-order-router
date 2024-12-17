@@ -226,6 +226,7 @@ export async function getBestSwapRouteBy(
       },
       'Did not find a valid route without any splits. Continuing search anyway.'
     );
+    console.log("Did not find a valid route without any splits. Continuing search anyway.")
   } else {
     bestQuote = by(percentToSortedQuotes[100][0]!);
     bestSwap = [percentToSortedQuotes[100][0]!];
@@ -280,8 +281,11 @@ export async function getBestSwapRouteBy(
 
   let splits = 1;
   let startedSplit = Date.now();
-
+  let queueCount = 0;
+  let gasCount = 0;
+  let gasTime = 0;
   while (queue.size > 0) {
+    queueCount += 1;
     metric.putMetric(
       `Split${splits}Done`,
       Date.now() - startedSplit,
@@ -380,9 +384,12 @@ export async function getBestSwapRouteBy(
               );
               if (v2Routes.length > 0 && V2_SUPPORTED.includes(chainId)) {
                 if (v2GasModel) {
+                  const start = Date.now();
                   const v2GasCostL1 = await v2GasModel.calculateL1GasFees!(
                     v2Routes as V2RouteWithValidQuote[]
                   );
+                  gasTime += (Date.now() - start);
+                  gasCount += 1;
                   gasCostL1QuoteToken = gasCostL1QuoteToken.add(
                     v2GasCostL1.gasCostL1QuoteToken
                   );
@@ -393,9 +400,12 @@ export async function getBestSwapRouteBy(
               );
               if (v3Routes.length > 0) {
                 if (v3GasModel) {
+                  const start = Date.now();
                   const v3GasCostL1 = await v3GasModel.calculateL1GasFees!(
                     v3Routes as V3RouteWithValidQuote[]
                   );
+                  gasTime += (Date.now() - start);
+                  gasCount += 1;
                   gasCostL1QuoteToken = gasCostL1QuoteToken.add(
                     v3GasCostL1.gasCostL1QuoteToken
                   );
@@ -444,6 +454,7 @@ export async function getBestSwapRouteBy(
     return undefined;
   }
 
+  console.log("queueCount ", queueCount, " gasCount ", gasCount, "gasTime ", gasTime);
   const postSplitNow = Date.now();
 
   let quoteGasAdjusted = sumFn(
