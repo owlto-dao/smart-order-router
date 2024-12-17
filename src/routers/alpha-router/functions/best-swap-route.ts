@@ -70,13 +70,14 @@ export async function getBestSwapRoute(
   // Build a map of percentage of the input to list of valid quotes.
   // Quotes can be null for a variety of reasons (not enough liquidity etc), so we drop them here too.
   const percentToQuotes: { [percent: number]: RouteWithValidQuote[] } = {};
-  console.log("routesWithValidQuotes ", routesWithValidQuotes.length)
+  console.log("origin routesWithValidQuotes ", routesWithValidQuotes.length, "percents", percents.length)
   const temp = routesWithValidQuotes;
   routesWithValidQuotes = [];
   for (let i = 0; i < Math.min(temp.length, 48); i++) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     routesWithValidQuotes.push(temp[i]!);
   }
+  console.log("new routesWithValidQuotes ", routesWithValidQuotes.length)
   for (const routeWithValidQuote of routesWithValidQuotes) {
     if (!percentToQuotes[routeWithValidQuote.percent]) {
       percentToQuotes[routeWithValidQuote.percent] = [];
