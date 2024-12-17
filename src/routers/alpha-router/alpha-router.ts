@@ -1096,7 +1096,7 @@ export class AlphaRouter
 
     const tokenIn = currencyIn.wrapped;
     const tokenOut = currencyOut.wrapped;
-
+    console.log("token in ", tokenIn.symbol, "tokenOut ", tokenOut.symbol, "chain ", tokenIn.chainId)
     console.time("tokenOutProperties");
     const tokenOutProperties =
       await this.tokenPropertiesProvider.getTokensProperties(
@@ -1334,6 +1334,7 @@ export class AlphaRouter
     let swapRouteFromCachePromise: Promise<BestSwapRoute | null> =
       Promise.resolve(null);
     if (cachedRoutes) {
+      console.log("use cache!")
       swapRouteFromCachePromise = this.getSwapRouteFromCache(
         cachedRoutes,
         await blockNumber,
@@ -1353,6 +1354,7 @@ export class AlphaRouter
     let swapRouteFromChainPromise: Promise<BestSwapRoute | null> =
       Promise.resolve(null);
     if (!cachedRoutes || cacheMode !== CacheMode.Livemode) {
+      console.log("use chain!");
       swapRouteFromChainPromise = this.getSwapRouteFromChain(
         amount,
         tokenIn,
@@ -2068,7 +2070,8 @@ export class AlphaRouter
       log.info({ allRoutesWithValidQuotes }, 'Received no valid quotes');
       return null;
     }
-
+    console.log("allCandidatePools ", allCandidatePools.length)
+    console.time("getBestSwapRoute")
     // Given all the quotes for all the amounts for all the routes, find the best combination.
     const bestSwapRoute = await getBestSwapRoute(
       amount,
@@ -2083,6 +2086,7 @@ export class AlphaRouter
       swapConfig,
       providerConfig
     );
+    console.timeEnd("getBestSwapRoute")
 
     if (bestSwapRoute) {
       this.emitPoolSelectionMetrics(bestSwapRoute, allCandidatePools);
