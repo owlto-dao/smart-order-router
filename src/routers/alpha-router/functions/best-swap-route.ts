@@ -50,6 +50,7 @@ export async function getBestSwapRoute(
 
   const { forceMixedRoutes } = routingConfig;
 
+  console.log("forceMixedRoutes ", forceMixedRoutes);
   /// Like with forceCrossProtocol, we apply that logic here when determining the bestSwapRoute
   if (forceMixedRoutes) {
     log.info(
@@ -70,6 +71,12 @@ export async function getBestSwapRoute(
   // Quotes can be null for a variety of reasons (not enough liquidity etc), so we drop them here too.
   const percentToQuotes: { [percent: number]: RouteWithValidQuote[] } = {};
   console.log("routesWithValidQuotes ", routesWithValidQuotes.length)
+  const temp = routesWithValidQuotes;
+  routesWithValidQuotes = [];
+  for (let i = 0; i < Math.min(temp.length, 48); i++) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    routesWithValidQuotes.push(temp[i]!);
+  }
   for (const routeWithValidQuote of routesWithValidQuotes) {
     if (!percentToQuotes[routeWithValidQuote.percent]) {
       percentToQuotes[routeWithValidQuote.percent] = [];
