@@ -244,7 +244,7 @@ export async function calculateOptimismToL1FeeFromCalldata(
   ]);
 
   console.log("l1GasUsed ", l1GasUsed.toBigInt(), "l1GasCost", l1GasCost.toBigInt());
-  console.log("myL1GasUsed ", myL1GasUsed, "myL1GasCost ", myL1GasCost)
+  console.log("myL1GasUsed ", myL1GasUsed.toBigInt(), "myL1GasCost ", myL1GasCost.toBigInt())
   return [l1GasUsed, l1GasCost];
 }
 
