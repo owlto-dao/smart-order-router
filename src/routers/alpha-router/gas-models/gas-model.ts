@@ -57,7 +57,7 @@ import {
   USDT_OPTIMISM,
   USDT_OPTIMISM_GOERLI,
   USDT_OPTIMISM_SEPOLIA,
-  WBTC_GOERLI,
+  WBTC_GOERLI, USDC_WORLDCHAIN, USDC_ASTROCHAIN_SEPOLIA
 } from '../../../providers/token-provider';
 import { IV2PoolProvider } from '../../../providers/v2/pool-provider';
 import {
@@ -121,6 +121,8 @@ export const usdGasTokensByChain: { [chainId in ChainId]?: Token[] } = {
   [ChainId.BLAST]: [USDB_BLAST],
   [ChainId.ZORA]: [USDC_ZORA],
   [ChainId.ZKSYNC]: [DAI_ZKSYNC, USDCE_ZKSYNC, USDC_ZKSYNC],
+  [ChainId.WORLDCHAIN]: [USDC_WORLDCHAIN],
+  [ChainId.ASTROCHAIN_SEPOLIA]: [USDC_ASTROCHAIN_SEPOLIA],
 };
 
 export type L1ToL2GasCosts = {

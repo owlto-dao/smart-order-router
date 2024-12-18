@@ -41,7 +41,7 @@ import {
   USDC_OPTIMISM_GOERLI,
   USDC_OPTIMISM_SEPOLIA,
   USDC_POLYGON,
-  USDC_SEPOLIA,
+  USDC_SEPOLIA, USDC_WORLDCHAIN,
   USDT_ARBITRUM,
   USDT_BNB,
   USDT_MAINNET,
@@ -53,9 +53,9 @@ import {
   WBTC_MOONBEAM,
   WBTC_OPTIMISM,
   WBTC_OPTIMISM_GOERLI,
-  WBTC_OPTIMISM_SEPOLIA,
+  WBTC_OPTIMISM_SEPOLIA, WBTC_WORLDCHAIN, WLD_WORLDCHAIN,
   WMATIC_POLYGON,
-  WMATIC_POLYGON_MUMBAI,
+  WMATIC_POLYGON_MUMBAI
 } from './token-provider';
 
 // These tokens will added to the Token cache on initialization.
@@ -170,6 +170,12 @@ export const CACHE_SEED_TOKENS: {
   },
   [ChainId.ZKSYNC]: {
     WETH: WRAPPED_NATIVE_CURRENCY[ChainId.ZKSYNC],
+  },
+  [ChainId.WORLDCHAIN]: {
+    USDC: USDC_WORLDCHAIN,
+    WLD: WLD_WORLDCHAIN,
+    WBTC: WBTC_WORLDCHAIN,
+    WETH: WRAPPED_NATIVE_CURRENCY[ChainId.WORLDCHAIN],
   },
   // Currently we do not have providers for Moonbeam mainnet or Gnosis testnet
 };
