@@ -2197,6 +2197,7 @@ export class AlphaRouter
           )
         : Promise.resolve(null);
 
+    console.time("getGasModels_pools")
     const [
       usdPool,
       nativeAndQuoteTokenV3Pool,
@@ -2208,6 +2209,7 @@ export class AlphaRouter
       nativeAndAmountTokenV3PoolPromise,
       nativeAndSpecifiedGasTokenV3PoolPromise,
     ]);
+    console.time("getGasModels_pools")
 
     const pools: LiquidityCalculationPools = {
       usdPool: usdPool,
