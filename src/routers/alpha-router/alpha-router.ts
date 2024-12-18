@@ -1841,9 +1841,7 @@ export class AlphaRouter
     const v3ProtocolSpecified = protocols.includes(Protocol.V3);
     const v2ProtocolSpecified = protocols.includes(Protocol.V2);
     const v2SupportedInChain = this.v2Supported?.includes(this.chainId);
-    const shouldQueryMixedProtocol =
-      protocols.includes(Protocol.MIXED) ||
-      (noProtocolsSpecified && v2SupportedInChain);
+    const shouldQueryMixedProtocol = false;
     const mixedProtocolAllowed =
       [ChainId.MAINNET, ChainId.GOERLI].includes(this.chainId) &&
       tradeType === TradeType.EXACT_INPUT;

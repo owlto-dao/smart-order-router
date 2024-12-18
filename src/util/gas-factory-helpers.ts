@@ -231,31 +231,30 @@ export async function calculateOptimismToL1FeeFromCalldata(
     chainId: chainId,
     type: 2, // sign the transaction as EIP-1559, otherwise it will fail at maxFeePerGas
   };
-  let myL1GasUsed = BigNumber.from(0);
-  let myL1GasCost = BigNumber.from(0);
+  let myL1GasUsed = BigInt(0);
+  let myL1GasCost = BigInt(0);
   if (chainId === ChainId.BASE ) {
     myL1GasUsed = getL1Gas(calldata);
     myL1GasCost = getL1GasCost(calldata);
+    return [BigNumber.from(myL1GasUsed + BigInt(300)), BigNumber.from(myL1GasCost + BigInt(30000000000))]
   }
   const [l1GasUsed, l1GasCost] = await Promise.all([
     estimateL1Gas(provider, tx),
     estimateL1GasCost(provider, tx),
   ]);
 
-  console.log("l1GasUsed ", l1GasUsed.toBigInt(), "l1GasCost", l1GasCost.toBigInt());
-  console.log("myL1GasUsed ", myL1GasUsed.toBigInt(), "myL1GasCost ", myL1GasCost.toBigInt())
   return [l1GasUsed, l1GasCost];
 }
 
 // owlto start
 
-function getL1Gas(data: string): BigNumber {
+function getL1Gas(data: string): bigint {
   const regression = fjordLinearRegression(BigInt(flzCompress(data).length + 68));
-  return BigNumber.from(regression * BigInt(16) / BigInt(1000000))
+  return regression * BigInt(16) / BigInt(1000000)
 }
 
-function getL1GasCost(data: string): BigNumber {
-    return BigNumber.from(fjordL1Cost(BigInt(flzCompress(data).length + 68)))
+function getL1GasCost(data: string): bigint {
+    return fjordL1Cost(BigInt(flzCompress(data).length + 68))
 }
 
 function fjordL1Cost(fastLzSize: bigint): bigint {
