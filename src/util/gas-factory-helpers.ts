@@ -26,9 +26,9 @@ import {
 } from '../routers';
 import { CurrencyAmount, log, WRAPPED_NATIVE_CURRENCY } from '../util';
 
-import { estimateL1Gas, estimateL1GasCost } from '@eth-optimism/sdk';
-import { BaseProvider, TransactionRequest } from '@ethersproject/providers';
-// import { BaseProvider } from '@ethersproject/providers';
+//import { estimateL1Gas, estimateL1GasCost } from '@eth-optimism/sdk';
+//import { BaseProvider, TransactionRequest } from '@ethersproject/providers';
+import { BaseProvider } from '@ethersproject/providers';
 import { Pair } from '@uniswap/v2-sdk';
 import { ProviderConfig } from '../providers/provider';
 import { opStackChains } from './l2FeeChains';
@@ -227,19 +227,21 @@ export async function calculateOptimismToL1FeeFromCalldata(
   chainId: ChainId,
   provider: BaseProvider
 ): Promise<[BigNumber, BigNumber]> {
-  const tx: TransactionRequest = {
-    data: calldata,
-    chainId: chainId,
-    type: 2, // sign the transaction as EIP-1559, otherwise it will fail at maxFeePerGas
-  };
-  const start = Date.now();
-  const [l1GasUsed, l1GasCost] = await Promise.all([
-    estimateL1Gas(provider, tx),
-    estimateL1GasCost(provider, tx),
-  ]);
-  console.log("estimate gas cost ", Date.now() - start)
-
-  return [l1GasUsed, l1GasCost];
+  // const tx: TransactionRequest = {
+  //   data: calldata,
+  //   chainId: chainId,
+  //   type: 2, // sign the transaction as EIP-1559, otherwise it will fail at maxFeePerGas
+  // };
+  // const start = Date.now();
+  // const [l1GasUsed, l1GasCost] = await Promise.all([
+  //   estimateL1Gas(provider, tx),
+  //   estimateL1GasCost(provider, tx),
+  // ]);
+  // console.log("estimate gas cost ", Date.now() - start)
+  calldata;
+  chainId;
+  provider;
+  return [BigNumber.from(100), BigNumber.from(100)];
 }
 
 export function getL2ToL1GasUsed(data: string, chainId: ChainId): BigNumber {
