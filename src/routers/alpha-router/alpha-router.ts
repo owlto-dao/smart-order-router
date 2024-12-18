@@ -1855,9 +1855,10 @@ export class AlphaRouter
     const v3ProtocolSpecified = protocols.includes(Protocol.V3);
     const v2ProtocolSpecified = protocols.includes(Protocol.V2);
     const v2SupportedInChain = this.v2Supported?.includes(this.chainId);
-    const shouldQueryMixedProtocol =
-      protocols.includes(Protocol.MIXED) ||
-      (noProtocolsSpecified && v2SupportedInChain);
+    // const shouldQueryMixedProtocol =
+    //   protocols.includes(Protocol.MIXED) ||
+    //   (noProtocolsSpecified && v2SupportedInChain);
+    const shouldQueryMixedProtocol = false;
     const mixedProtocolAllowed =
       [ChainId.MAINNET, ChainId.GOERLI].includes(this.chainId) &&
       tradeType === TradeType.EXACT_INPUT;
@@ -1871,6 +1872,7 @@ export class AlphaRouter
       noProtocolsSpecified ||
       (shouldQueryMixedProtocol && mixedProtocolAllowed)
     ) {
+      console.log("getV3CandidatePools")
       v3CandidatePoolsPromise = getV3CandidatePools({
         tokenIn,
         tokenOut,
@@ -1900,6 +1902,7 @@ export class AlphaRouter
       // Fetch all the pools that we will consider routing via. There are thousands
       // of pools, so we filter them to a set of candidate pools that we expect will
       // result in good prices.
+      console.log("getV2CandidatePools")
       v2CandidatePoolsPromise = getV2CandidatePools({
         tokenIn,
         tokenOut,
@@ -1925,7 +1928,7 @@ export class AlphaRouter
     // Maybe Quote V3 - if V3 is specified, or no protocol is specified
     if (v3ProtocolSpecified || noProtocolsSpecified) {
       log.info({ protocols, tradeType }, 'Routing across V3');
-
+      console.log("routing across V3");
       metric.putMetric(
         'SwapRouteFromChain_V3_GetRoutesThenQuotes_Request',
         1,
@@ -1964,7 +1967,7 @@ export class AlphaRouter
     // Maybe Quote V2 - if V2 is specified, or no protocol is specified AND v2 is supported in this chain
     if (v2SupportedInChain && (v2ProtocolSpecified || noProtocolsSpecified)) {
       log.info({ protocols, tradeType }, 'Routing across V2');
-
+      console.log("routing across V2");
       metric.putMetric(
         'SwapRouteFromChain_V2_GetRoutesThenQuotes_Request',
         1,
@@ -2006,7 +2009,7 @@ export class AlphaRouter
     // AND is Mainnet or Gorli
     if (shouldQueryMixedProtocol && mixedProtocolAllowed) {
       log.info({ protocols, tradeType }, 'Routing across MixedRoutes');
-
+      console.log("Routing across MixedRoutes");
       metric.putMetric(
         'SwapRouteFromChain_Mixed_GetRoutesThenQuotes_Request',
         1,
@@ -2055,7 +2058,9 @@ export class AlphaRouter
       );
     }
 
+    console.time("quotePromises")
     const getQuotesResults = await Promise.all(quotePromises);
+    console.timeEnd("quotePromises")
 
     const allRoutesWithValidQuotes: RouteWithValidQuote[] = [];
     const allCandidatePools: CandidatePoolsBySelectionCriteria[] = [];

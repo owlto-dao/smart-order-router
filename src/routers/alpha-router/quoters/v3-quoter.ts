@@ -162,11 +162,13 @@ export class V3Quoter extends BaseQuoter<V3CandidatePools, V3Route> {
       `Getting quotes for V3 for ${routes.length} routes with ${amounts.length} amounts per route.`
     );
 
+    console.time("V3 quoteFn");
     const { routesWithQuotes } = await quoteFn<V3Route>(
       amounts,
       routes,
       routingConfig
     );
+    console.timeEnd("V3 quoteFn")
 
     metric.putMetric(
       'V3QuotesLoad',

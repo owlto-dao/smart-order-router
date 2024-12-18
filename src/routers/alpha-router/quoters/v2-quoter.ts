@@ -180,8 +180,11 @@ export class V2Quoter extends BaseQuoter<V2CandidatePools, V2Route> {
     log.info(
       `Getting quotes for V2 for ${routes.length} routes with ${amounts.length} amounts per route.`
     );
+    console.time("V2 quoteFn");
     const { routesWithQuotes } = await quoteFn(amounts, routes, _routingConfig);
+    console.timeEnd("V2 quoteFn");
 
+    console.time("V2 buildGasModel");
     const v2GasModel = await this.v2GasModelFactory.buildGasModel({
       chainId: this.chainId,
       gasPriceWei,
@@ -198,6 +201,7 @@ export class V2Quoter extends BaseQuoter<V2CandidatePools, V2Route> {
         gasToken,
       },
     });
+    console.timeEnd("V2 buildGasModel");
 
     metric.putMetric(
       'V2QuotesLoad',
