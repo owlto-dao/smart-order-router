@@ -282,8 +282,10 @@ export async function getBestSwapRouteBy(
   let splits = 1;
   let startedSplit = Date.now();
   let queueCount = 0;
-  let gasCount = 0;
-  let gasTime = 0;
+  let gasCountV2 = 0;
+  let gasTimeV2 = 0;
+  let gasCountV3 = 0;
+  let gasTimeV3 = 0;
   while (queue.size > 0) {
     queueCount += 1;
     metric.putMetric(
@@ -388,8 +390,8 @@ export async function getBestSwapRouteBy(
                   const v2GasCostL1 = await v2GasModel.calculateL1GasFees!(
                     v2Routes as V2RouteWithValidQuote[]
                   );
-                  gasTime += (Date.now() - start);
-                  gasCount += 1;
+                  gasTimeV2 += (Date.now() - start);
+                  gasCountV2 += 1;
                   gasCostL1QuoteToken = gasCostL1QuoteToken.add(
                     v2GasCostL1.gasCostL1QuoteToken
                   );
@@ -404,8 +406,8 @@ export async function getBestSwapRouteBy(
                   const v3GasCostL1 = await v3GasModel.calculateL1GasFees!(
                     v3Routes as V3RouteWithValidQuote[]
                   );
-                  gasTime += (Date.now() - start);
-                  gasCount += 1;
+                  gasTimeV3 += (Date.now() - start);
+                  gasCountV3 += 1;
                   gasCostL1QuoteToken = gasCostL1QuoteToken.add(
                     v3GasCostL1.gasCostL1QuoteToken
                   );
@@ -454,7 +456,8 @@ export async function getBestSwapRouteBy(
     return undefined;
   }
 
-  console.log("queueCount ", queueCount, " gasCount ", gasCount, "gasTime ", gasTime);
+  console.log("queueCount ", queueCount, " gasCountV2 ", gasCountV2, "gasTimeV2 ", gasTimeV2);
+  console.log("gasCountV3 ", gasCountV3, " gasTimeV3 ", gasTimeV3)
   const postSplitNow = Date.now();
 
   let quoteGasAdjusted = sumFn(
