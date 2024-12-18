@@ -4,7 +4,7 @@ import { ChainId, Percent, Token, TradeType } from '@uniswap/sdk-core';
 import { FeeAmount, Pool } from '@uniswap/v3-sdk';
 import brotli from 'brotli';
 import JSBI from 'jsbi';
-import _ from 'lodash';
+import _, { parseInt } from 'lodash';
 
 import { IV2PoolProvider } from '../providers';
 import { IPortionProvider } from '../providers/portion-provider';
@@ -231,13 +231,117 @@ export async function calculateOptimismToL1FeeFromCalldata(
     chainId: chainId,
     type: 2, // sign the transaction as EIP-1559, otherwise it will fail at maxFeePerGas
   };
+  let myL1GasUsed = BigNumber.from(0);
+  let myL1GasCost = BigNumber.from(0);
+  if (chainId === ChainId.BASE ) {
+    myL1GasUsed = getL1Gas(calldata);
+    myL1GasCost = getL1GasCost();
+
+  }
   const [l1GasUsed, l1GasCost] = await Promise.all([
     estimateL1Gas(provider, tx),
     estimateL1GasCost(provider, tx),
   ]);
+
+  console.log("l1GasUsed ", l1GasUsed.toBigInt(), "l1GasCost", l1GasCost.toBigInt());
+  console.log("myL1GasUsed ", myL1GasUsed, "myL1GasCost ", myL1GasCost)
   return [l1GasUsed, l1GasCost];
 }
 
+// owlto start
+
+function getL1Gas(data: string): BigNumber {
+  const regression = fjordLinearRegression(BigInt(flzCompress(data).length + 68));
+  return BigNumber.from(regression * BigInt(16) / BigInt(1000000))
+}
+
+function getL1GasCost(): BigNumber {
+    return BigNumber.from(0)
+}
+
+// function fjordL1Cost(fastLzSize: bigint): bigint {
+//   const estimatedSize = fjordLinearRegression(fastLzSize);
+//   const feeScaled = baseFeeScalar() * BigInt(16) * l1BaseFee() + blobBaseFeeScalar() * blobBaseFee();
+// }
+//
+// function baseFeeScalar(): bigint {
+//   return BigInt(0);
+// }
+//
+// function l1BaseFee(): bigint {
+//   return
+// }
+
+function fjordLinearRegression(_fastLzSize: bigint): bigint {
+  const COST_INTERCEPT = BigInt(-42585600)
+  const COST_FASTLZ_COEF = BigInt(836500);
+  const MIN_TRANSACTION_SIZE = BigInt(100);
+  const E6 = BigInt(1000000);
+
+  let estimatedSize = COST_INTERCEPT + (COST_FASTLZ_COEF * _fastLzSize);
+  if (estimatedSize < (MIN_TRANSACTION_SIZE) * E6) {
+    estimatedSize = (MIN_TRANSACTION_SIZE) * E6;
+  }
+  return estimatedSize;
+}
+
+function parseStringToBytes(data: string): number[] {
+    if (data.startsWith("0x") || data.startsWith("0X")) {
+      data = data.substring(2);
+    }
+    if (data.length % 2 == 1) {
+      throw new Error("invalid hex string")
+    }
+    const array: number[] = [];
+    let i = 0;
+    for (i = 0; i < data.length; i += 2) {
+      array.push(parseInt(data.substring(i, i + 2), 16));
+    }
+    return array;
+}
+
+// https://github.com/Vectorized/solady/blob/0dfa99736008ee4d0ee3cd0edd24e2fcfa227b8e/src/utils/LibZip.sol#L23
+function flzCompress(data: string): number[] {
+  const ib = parseStringToBytes(data);
+  const b = ib.length - 4;
+  const ht = [];
+  const ob = [];
+  let a = 0, i = 2, o = 0, j, s, h, d, c, l, r, p, q, e;
+
+  function u24(i: number): number {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return ib[i]! | (ib[++i]! << 8) | (ib[++i]! << 16);
+  }
+
+  function hash(x: number): number {
+    return ((2654435769 * x) >> 19) & 8191;
+  }
+
+  function literals(r: number, s: number) {
+    while (r >= 32) for (ob[o++] = 31, j = 32; j--; r--) ob[o++] = ib[s++];
+    if (r) for (ob[o++] = r - 1; r--; ) ob[o++] = ib[s++];
+  }
+
+  while (i < b - 9) {
+    do {
+      r = ht[h = hash(s = u24(i))] || 0;
+      c = (d = (ht[h] = i) - r) < 8192 ? u24(r) : 0x1000000;
+    } while (i < b - 9 && i++ && s != c);
+    if (i >= b - 9) break;
+    if (--i > a) literals(i - a, a);
+    for (l = 0, p = r + 3, q = i + 3, e = b - q; l < e; l++) e *= (ib[p + l] === ib[q + l] ? 1 : 0);
+    i += l;
+    for (--d; l > 262; l -= 262) ob[o++] = 224 + (d >> 8), ob[o++] = 253, ob[o++] = d & 255;
+    if (l < 7) ob[o++] = (l << 5) + (d >> 8), ob[o++] = d & 255;
+    else ob[o++] = 224 + (d >> 8), ob[o++] = l - 7, ob[o++] = d & 255;
+    ht[hash(u24(i))] = i++, ht[hash(u24(i))] = i++, a = i;
+  }
+  literals(b + 4 - a, a);
+  return ob;
+}
+
+
+// owlto end
 export function getL2ToL1GasUsed(data: string, chainId: ChainId): BigNumber {
   switch (chainId) {
     case ChainId.ARBITRUM_ONE:
