@@ -235,8 +235,7 @@ export async function calculateOptimismToL1FeeFromCalldata(
   let myL1GasCost = BigNumber.from(0);
   if (chainId === ChainId.BASE ) {
     myL1GasUsed = getL1Gas(calldata);
-    myL1GasCost = getL1GasCost();
-
+    myL1GasCost = getL1GasCost(calldata);
   }
   const [l1GasUsed, l1GasCost] = await Promise.all([
     estimateL1Gas(provider, tx),
@@ -255,8 +254,14 @@ function getL1Gas(data: string): BigNumber {
   return BigNumber.from(regression * BigInt(16) / BigInt(1000000))
 }
 
-function getL1GasCost(): BigNumber {
-    return BigNumber.from(0)
+function getL1GasCost(data: string): BigNumber {
+    return BigNumber.from(fjordL1Cost(BigInt(flzCompress(data).length + 68)))
+}
+
+function fjordL1Cost(fastLzSize: bigint): bigint {
+  const estimatedSize = fjordLinearRegression(fastLzSize);
+  const feeScaled = BigInt(2269) * BigInt(16) * BigInt(16486578760) + BigInt(1055762) * BigInt(200822);
+  return estimatedSize * feeScaled / (BigInt(10) ** BigInt((6 * 2)));
 }
 
 // function fjordL1Cost(fastLzSize: bigint): bigint {
