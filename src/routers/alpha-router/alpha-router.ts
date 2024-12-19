@@ -5,9 +5,9 @@ import { Protocol, SwapRouter, Trade, ZERO } from '@uniswap/router-sdk';
 import {
   ChainId,
   Currency,
-  Fraction,
+  Fraction, Percent,
   Token,
-  TradeType,
+  TradeType
 } from '@uniswap/sdk-core';
 import { TokenList } from '@uniswap/token-lists';
 import { Pool, Position, SqrtPriceMath, TickMath } from '@uniswap/v3-sdk';
@@ -1073,6 +1073,20 @@ export class AlphaRouter
       status: SwapToRatioStatus.SUCCESS,
       result: { ...swap, methodParameters, optimalRatio, postSwapTargetPool },
     };
+  }
+
+  public async owltoRoute(
+    amount: CurrencyAmount,
+    quoteCurrency: Currency,
+    slippage: number,
+    tradeType: TradeType,
+    swapConfig?: SwapOptions,
+    partialRoutingConfig: Partial<AlphaRouterConfig> = {}
+  ): Promise<SwapRoute | null> {
+    if (swapConfig) {
+      swapConfig!.slippageTolerance = new Percent(slippage, 10000)
+    }
+    return this.route(amount, quoteCurrency, tradeType, swapConfig, partialRoutingConfig);
   }
 
   /**
