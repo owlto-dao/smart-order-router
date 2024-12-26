@@ -64,7 +64,7 @@ import {
   WMATIC_POLYGON,
   WMATIC_POLYGON_MUMBAI,
   WSTETH_MAINNET,
-  WXDAI_GNOSIS,
+  WXDAI_GNOSIS, USDC_BOB, USDT_BOB
 } from '../token-provider';
 
 import { IV3PoolProvider } from './pool-provider';
@@ -175,6 +175,11 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDCE_ZKSYNC,
     USDC_ZKSYNC,
   ],
+  [ChainId.BOB]: [
+    WRAPPED_NATIVE_CURRENCY[ChainId.BOB]!,
+    USDC_BOB,
+    USDT_BOB,
+  ]
 };
 
 /**

@@ -42,7 +42,7 @@ import {
   WBTC_OPTIMISM,
   WETH_POLYGON,
   WMATIC_POLYGON,
-  WSTETH_MAINNET,
+  WSTETH_MAINNET, USDC_BOB, USDT_BOB
 } from '../token-provider';
 
 import { IV2SubgraphProvider, V2SubgraphPool } from './subgraph-provider';
@@ -119,6 +119,11 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ZKSYNC]!,
     USDCE_ZKSYNC,
     USDC_ZKSYNC,
+  ],
+  [ChainId.BOB]: [
+    WRAPPED_NATIVE_CURRENCY[ChainId.BOB]!,
+    USDC_BOB,
+    USDT_BOB,
   ],
 };
 

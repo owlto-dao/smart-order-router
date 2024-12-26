@@ -230,7 +230,7 @@ export class V3PoolProvider implements IV3PoolProvider {
       tokenB: token1,
       fee: feeAmount,
       initCodeHashManualOverride: undefined,
-      chainId: this.chainId,
+      chainId: this.chainId as any,
     });
 
     this.POOL_ADDRESS_CACHE[cacheKey] = poolAddress;

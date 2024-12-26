@@ -696,6 +696,22 @@ export const DAI_ZKSYNC = new Token(
   'Dai Stablecoin'
 );
 
+export const USDC_BOB = new Token(
+  ChainId.BOB,
+  '0xe75D0fB2C24A55cA1e3F96781a2bCC7bdba058F0',
+  6,
+  'USDC',
+  'Bridged USDC (bob-mainnet)'
+);
+
+export const USDT_BOB = new Token(
+  ChainId.BOB,
+  '0x05D032ac25d322df992303dCa074EE7392C117b9',
+  6,
+  'USDT',
+  'Bridged USDT (bob-mainnet)'
+);
+
 export class TokenProvider implements ITokenProvider {
   constructor(
     private chainId: ChainId,

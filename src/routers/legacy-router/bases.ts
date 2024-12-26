@@ -8,18 +8,17 @@ import {
   DAI_BNB,
   DAI_MAINNET,
   ITokenProvider,
-  USDB_BLAST,
-  USDCE_ZKSYNC,
-  USDC_AVAX,
+  USDB_BLAST, USDC_AVAX,
   USDC_BASE,
   USDC_BNB,
+  USDC_BOB,
   USDC_MAINNET,
   USDC_ZKSYNC,
+  USDCE_ZKSYNC,
   USDT_BNB,
+  USDT_BOB,
   USDT_MAINNET,
-  WBTC_MAINNET,
-  WMATIC_POLYGON,
-  WMATIC_POLYGON_MUMBAI,
+  WBTC_MAINNET, WMATIC_POLYGON, WMATIC_POLYGON_MUMBAI
 } from '../../providers/token-provider';
 import { WRAPPED_NATIVE_CURRENCY } from '../../util/chains';
 
@@ -83,6 +82,11 @@ export const BASES_TO_CHECK_TRADES_AGAINST = (
       WRAPPED_NATIVE_CURRENCY[ChainId.ZKSYNC]!,
       USDCE_ZKSYNC,
       USDC_ZKSYNC,
+    ],
+    [ChainId.BOB]: [
+      WRAPPED_NATIVE_CURRENCY[ChainId.BOB]!,
+      USDC_BOB,
+      USDT_BOB,
     ],
   };
 };
