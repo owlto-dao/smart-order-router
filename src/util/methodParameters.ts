@@ -240,6 +240,12 @@ export function buildSwapMethodParameters(
   chainId: ChainId
 ): MethodParameters {
   if (swapConfig.type == SwapType.UNIVERSAL_ROUTER) {
+    if (chainId == 60808) {
+      return {
+        ...UniversalRouter.swapERC20CallParameters(trade, swapConfig),
+        to: "0x346239972d1fa486FC4a521031BC81bFB7D6e8a4",
+      };
+    }
     return {
       ...UniversalRouter.swapERC20CallParameters(trade, swapConfig),
       to: UNIVERSAL_ROUTER_ADDRESS(chainId),
