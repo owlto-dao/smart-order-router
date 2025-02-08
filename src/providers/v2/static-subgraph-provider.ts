@@ -1,6 +1,7 @@
 import { ChainId, Token } from '@uniswap/sdk-core';
-import { Pair } from '@uniswap/v2-sdk';
 import _ from 'lodash';
+import { getCreate2Address } from '@ethersproject/address';
+import { keccak256, pack } from '@ethersproject/solidity';
 
 import { WRAPPED_NATIVE_CURRENCY } from '../../util/chains';
 import { log } from '../../util/log';
@@ -50,7 +51,7 @@ import {
   WETH_POLYGON,
   WLD_WORLDCHAIN,
   WMATIC_POLYGON,
-  WSTETH_MAINNET,
+  WSTETH_MAINNET, WETH_SONEIUM, USDCE_SONEIUM, USDT_SONEIUM
 } from '../token-provider';
 
 import { IV2SubgraphProvider, V2SubgraphPool } from './subgraph-provider';
@@ -151,6 +152,11 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.BASE_SEPOLIA]!,
     USDC_BASE_SEPOLIA,
   ],
+  [ChainId.SONEIUM]: [
+    WETH_SONEIUM,
+    USDCE_SONEIUM,
+    USDT_SONEIUM,
+  ],
 };
 
 /**
@@ -202,7 +208,7 @@ export class StaticV2SubgraphProvider implements IV2SubgraphProvider {
 
     const subgraphPools: V2SubgraphPool[] = _(pairs)
       .map(([tokenA, tokenB]) => {
-        const poolAddress = Pair.getAddress(tokenA, tokenB);
+        const poolAddress = getV2PairAddress(tokenA, tokenB);
 
         if (poolAddressSet.has(poolAddress)) {
           return undefined;
@@ -232,4 +238,27 @@ export class StaticV2SubgraphProvider implements IV2SubgraphProvider {
 
     return subgraphPools;
   }
+}
+
+// soneium only
+export function getV2PairAddress(tokenA: Token, tokenB: Token): string {
+  const factoryAddress = "0xC3d4fA777308412CbA0520c4034Ad3567de852dF";
+  return computePairAddress({ factoryAddress, tokenA, tokenB })
+}
+
+export const computePairAddress = ({
+                                     factoryAddress,
+                                     tokenA,
+                                     tokenB,
+                                   }: {
+  factoryAddress: string
+  tokenA: Token
+  tokenB: Token
+}): string => {
+  const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
+  return getCreate2Address(
+    factoryAddress,
+    keccak256(['bytes'], [pack(['address', 'address'], [token0.address, token1.address])]),
+    "0x986d5bc7d1ebad7b6aa48b90d79ba2498e5e223dad50971c48f147ab6395bdd2", // soneium v2
+  )
 }

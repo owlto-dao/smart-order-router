@@ -782,6 +782,30 @@ export const DAI_UNICHAIN = new Token(
   'Dai Stablecoin'
 );
 
+export const WETH_SONEIUM = new Token(
+  ChainId.SONEIUM,
+  '0x4200000000000000000000000000000000000006',
+  18,
+  'WETH',
+  'Wrapped Ether'
+);
+
+export const USDCE_SONEIUM = new Token(
+  ChainId.SONEIUM,
+  '0xbA9986D2381edf1DA03B0B9c1f8b00dc4AacC369',
+  6,
+  'USDC.e',
+  'Soneium Bridged USDC Soneium'
+);
+
+export const USDT_SONEIUM = new Token(
+  ChainId.SONEIUM,
+  '0x3A337a6adA9d885b6Ad95ec48F9b75f197b5AE35',
+  6,
+  'USDT',
+  'Soneium Bridged USDT Soneium'
+);
+
 export class TokenProvider implements ITokenProvider {
   constructor(
     private chainId: ChainId,
@@ -1036,6 +1060,8 @@ export const USDT_ON = (chainId: ChainId): Token => {
       return USDT_BNB;
     case ChainId.MONAD_TESTNET:
       return USDT_MONAD_TESTNET;
+    case ChainId.SONEIUM:
+      return USDT_SONEIUM;
     default:
       throw new Error(`Chain id: ${chainId} not supported`);
   }
@@ -1089,6 +1115,8 @@ export const USDC_ON = (chainId: ChainId): Token => {
       return USDC_BASE_SEPOLIA;
     case ChainId.UNICHAIN:
       return USDC_UNICHAIN;
+    case ChainId.SONEIUM:
+      return USDCE_SONEIUM;
     default:
       throw new Error(`Chain id: ${chainId} not supported`);
   }

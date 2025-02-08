@@ -664,6 +664,7 @@ export class AlphaRouter
         case ChainId.BASE:
         case ChainId.BLAST:
         case ChainId.ZORA:
+        case ChainId.SONEIUM:
         case ChainId.WORLDCHAIN:
         case ChainId.UNICHAIN_SEPOLIA:
         case ChainId.MONAD_TESTNET:

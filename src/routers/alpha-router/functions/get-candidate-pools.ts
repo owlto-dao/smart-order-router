@@ -256,6 +256,11 @@ const baseTokensByChain: { [chainId in ChainId]?: Token[] } = {
     DAI_UNICHAIN,
     USDC_UNICHAIN,
   ],
+  [ChainId.SONEIUM]: [
+    // todo owlto
+    // WETH_SONEIUM,
+    // USDCE_SONEIUM,
+  ]
 };
 
 class SubcategorySelectionPools<SubgraphPool> {

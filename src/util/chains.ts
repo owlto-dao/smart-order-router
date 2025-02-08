@@ -31,6 +31,7 @@ export const SUPPORTED_CHAINS: ChainId[] = [
   ChainId.UNICHAIN_SEPOLIA,
   ChainId.MONAD_TESTNET,
   ChainId.BASE_SEPOLIA,
+  ChainId.SONEIUM,
   // Gnosis and Moonbeam don't yet have contracts deployed yet
 ];
 
@@ -44,6 +45,7 @@ export const V2_SUPPORTED = [
   ChainId.BNB,
   ChainId.AVALANCHE,
   ChainId.MONAD_TESTNET,
+  ChainId.SONEIUM,
 ];
 
 export const V4_SUPPORTED = [ChainId.SEPOLIA];
@@ -137,6 +139,8 @@ export const ID_TO_CHAIN_ID = (id: number): ChainId => {
       return ChainId.MONAD_TESTNET;
     case 130:
       return ChainId.UNICHAIN;
+    case 1868:
+      return ChainId.SONEIUM;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -170,6 +174,7 @@ export enum ChainName {
   UNICHAIN_SEPOLIA = 'unichain-sepolia',
   UNICHAIN = 'unichain-mainnet',
   MONAD_TESTNET = 'monad-testnet',
+  SONEIUM = "soneium",
 }
 
 export enum NativeCurrencyName {
@@ -290,6 +295,11 @@ export const NATIVE_NAMES_BY_ID: { [chainId: number]: string[] } = {
     'ETHER',
     '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   ],
+  [ChainId.SONEIUM]: [
+    'ETH',
+    'ETHER',
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  ],
 };
 
 export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {
@@ -319,6 +329,7 @@ export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {
   [ChainId.MONAD_TESTNET]: NativeCurrencyName.MONAD,
   [ChainId.BASE_SEPOLIA]: NativeCurrencyName.ETHER,
   [ChainId.UNICHAIN]: NativeCurrencyName.ETHER,
+  [ChainId.SONEIUM]: NativeCurrencyName.ETHER,
 };
 
 export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
@@ -377,6 +388,8 @@ export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
       return ChainName.UNICHAIN;
     case 10143:
       return ChainName.MONAD_TESTNET;
+    case 1868:
+      return ChainName.SONEIUM;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -642,6 +655,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.BASE_SEPOLIA]: new Token(
     ChainId.BASE_SEPOLIA,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.SONEIUM]: new Token(
+    ChainId.SONEIUM,
     '0x4200000000000000000000000000000000000006',
     18,
     'WETH',

@@ -52,7 +52,7 @@ import {
   WETH_POLYGON,
   WLD_WORLDCHAIN,
   WMATIC_POLYGON,
-  WSTETH_MAINNET,
+  WSTETH_MAINNET, WETH_SONEIUM, USDCE_SONEIUM, USDT_SONEIUM
 } from './token-provider';
 import { V3SubgraphPool } from './v3/subgraph-provider';
 
@@ -179,6 +179,12 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     nativeOnChain(ChainId.MONAD_TESTNET),
     WRAPPED_NATIVE_CURRENCY[ChainId.MONAD_TESTNET]!,
     USDT_MONAD_TESTNET,
+  ],
+  [ChainId.SONEIUM]: [
+    nativeOnChain(ChainId.SONEIUM),
+    WETH_SONEIUM,
+    USDCE_SONEIUM,
+    USDT_SONEIUM,
   ],
 };
 

@@ -72,7 +72,7 @@ import {
   WMATIC_POLYGON,
   WMATIC_POLYGON_MUMBAI,
   WSTETH_MAINNET,
-  WXDAI_GNOSIS,
+  WXDAI_GNOSIS, WETH_SONEIUM, USDCE_SONEIUM, USDT_SONEIUM
 } from '../token-provider';
 
 import { IV3PoolProvider } from './pool-provider';
@@ -206,6 +206,11 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.BASE_SEPOLIA]!,
     USDC_BASE_SEPOLIA,
   ],
+  [ChainId.SONEIUM]: [
+    WETH_SONEIUM,
+    USDCE_SONEIUM,
+    USDT_SONEIUM,
+  ]
 };
 
 /**
@@ -278,7 +283,7 @@ export class StaticV3SubgraphProvider implements IV3SubgraphProvider {
       .map((pool) => {
         const { token0, token1, fee, liquidity } = pool;
 
-        const poolAddress = Pool.getAddress(pool.token0, pool.token1, pool.fee);
+        const poolAddress = Pool.getAddress(pool.token0, pool.token1, pool.fee, "0xf54c8516b0255aaf493382e8534bab492d4325d4c84374ac39f7fa643a5cfbcd", "0x137841043180BBA8EF52828F9030D1b7fE065F95");
 
         if (poolAddressSet.has(poolAddress)) {
           return undefined;

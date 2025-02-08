@@ -63,7 +63,7 @@ import {
   USDT_OPTIMISM,
   USDT_OPTIMISM_GOERLI,
   USDT_OPTIMISM_SEPOLIA,
-  WBTC_GOERLI,
+  WBTC_GOERLI, USDCE_SONEIUM, USDT_SONEIUM
 } from '../../../providers/token-provider';
 import { IV2PoolProvider } from '../../../providers/v2/pool-provider';
 import {
@@ -133,6 +133,7 @@ export const usdGasTokensByChain: { [chainId in ChainId]?: Token[] } = {
   [ChainId.MONAD_TESTNET]: [USDT_MONAD_TESTNET],
   [ChainId.BASE_SEPOLIA]: [USDC_BASE_SEPOLIA],
   [ChainId.UNICHAIN]: [DAI_UNICHAIN, USDC_UNICHAIN],
+  [ChainId.SONEIUM]: [USDCE_SONEIUM, USDT_SONEIUM],
 };
 
 export type L1ToL2GasCosts = {

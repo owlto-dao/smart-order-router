@@ -17,6 +17,7 @@ import { IMulticallProvider, Result } from '../multicall-provider';
 import { ProviderConfig } from '../provider';
 import { ITokenPropertiesProvider } from '../token-properties-provider';
 import { TokenValidationResult } from '../token-validator-provider';
+import { getV2PairAddress } from './static-subgraph-provider';
 
 type IReserves = {
   reserve0: BigNumber;
@@ -258,7 +259,7 @@ export class V2PoolProvider implements IV2PoolProvider {
       return { poolAddress: cachedAddress, token0, token1 };
     }
 
-    const poolAddress = Pair.getAddress(token0, token1);
+    const poolAddress = getV2PairAddress(token0, token1);
 
     this.POOL_ADDRESS_CACHE[cacheKey] = poolAddress;
 

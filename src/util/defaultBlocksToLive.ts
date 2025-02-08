@@ -6,6 +6,7 @@ export const DEFAULT_BLOCKS_TO_LIVE: { [chain in ChainId]: number } = {
   [ChainId.GOERLI]: 300,
   [ChainId.SEPOLIA]: 300,
   // (60 minutes) / (2 seconds) = 1800
+  [ChainId.SONEIUM]: 1800,
   [ChainId.OPTIMISM]: 1800,
   [ChainId.OPTIMISM_GOERLI]: 1800,
   [ChainId.OPTIMISM_SEPOLIA]: 1800,

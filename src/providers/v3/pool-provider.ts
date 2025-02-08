@@ -1,6 +1,9 @@
+import { defaultAbiCoder } from '@ethersproject/abi'
+import { getCreate2Address } from '@ethersproject/address'
 import { BigNumber } from '@ethersproject/bignumber';
+import { keccak256 } from '@ethersproject/solidity'
 import { ChainId, Token } from '@uniswap/sdk-core';
-import { computePoolAddress, FeeAmount, Pool } from '@uniswap/v3-sdk';
+import { FeeAmount, Pool } from '@uniswap/v3-sdk';
 import retry, { Options as RetryOptions } from 'async-retry';
 
 import { IUniswapV3PoolState__factory } from '../../types/v3/factories/IUniswapV3PoolState__factory';
@@ -178,8 +181,6 @@ export class V3PoolProvider
       tokenA: token0,
       tokenB: token1,
       fee: feeAmount,
-      initCodeHashManualOverride: undefined,
-      chainId: this.chainId,
     });
 
     this.POOL_ADDRESS_CACHE[cacheKey] = poolAddress;
@@ -225,4 +226,35 @@ export class V3PoolProvider
       getAllPools: (): Pool[] => Object.values(poolIdentifierToPool),
     };
   }
+}
+
+/**
+ * Computes a pool address
+ * @param factoryAddress The Uniswap V3 factory address
+ * @param tokenA The first token of the pair, irrespective of sort order
+ * @param tokenB The second token of the pair, irrespective of sort order
+ * @param fee The fee tier of the pool
+ * @param initCodeHashManualOverride Override the init code hash used to compute the pool address if necessary
+ * @param chainId
+ * @returns The pool address
+ */
+export function computePoolAddress({
+                                     factoryAddress,
+                                     tokenA,
+                                     tokenB,
+                                     fee,
+                                   }: {
+  factoryAddress: string
+  tokenA: Token
+  tokenB: Token
+  fee: FeeAmount
+}): string {
+  const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
+  const salt = keccak256(
+    ['bytes'],
+    [defaultAbiCoder.encode(['address', 'address', 'uint24'], [token0.address, token1.address, fee])]
+  )
+  const initCodeHash = "0xf54c8516b0255aaf493382e8534bab492d4325d4c84374ac39f7fa643a5cfbcd" // soneium
+  console.log(tokenA.address, tokenB.address)
+  return getCreate2Address(factoryAddress, salt, initCodeHash)
 }
