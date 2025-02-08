@@ -255,6 +255,5 @@ export function computePoolAddress({
     [defaultAbiCoder.encode(['address', 'address', 'uint24'], [token0.address, token1.address, fee])]
   )
   const initCodeHash = "0xf54c8516b0255aaf493382e8534bab492d4325d4c84374ac39f7fa643a5cfbcd" // soneium
-  console.log(tokenA.address, tokenB.address)
   return getCreate2Address(factoryAddress, salt, initCodeHash)
 }
