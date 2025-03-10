@@ -4,7 +4,9 @@ import { parseBytes32String } from '@ethersproject/strings';
 import { ChainId, Token } from '@uniswap/sdk-core';
 import _ from 'lodash';
 
-import { IERC20Metadata__factory } from '../types/v3/factories/IERC20Metadata__factory';
+import {
+  IERC20Metadata__factory
+} from '../types/v3/factories/IERC20Metadata__factory';
 import { log, WRAPPED_NATIVE_CURRENCY } from '../util';
 
 import { IMulticallProvider, Result } from './multicall-provider';
@@ -782,6 +784,22 @@ export const DAI_UNICHAIN = new Token(
   'Dai Stablecoin'
 );
 
+export const WETH_INK = new Token(
+  ChainId.INK,
+  '0x4200000000000000000000000000000000000006',
+  18,
+  'WETH',
+  'WETH'
+);
+
+export const USDT0_INK = new Token(
+  ChainId.INK,
+  '0x0200C29006150606B650577BBE7B6248F58470c1',
+  6,
+  'USDT0',
+  'USDT0'
+);
+
 export class TokenProvider implements ITokenProvider {
   constructor(
     private chainId: ChainId,
@@ -1036,6 +1054,8 @@ export const USDT_ON = (chainId: ChainId): Token => {
       return USDT_BNB;
     case ChainId.MONAD_TESTNET:
       return USDT_MONAD_TESTNET;
+    case ChainId.INK:
+      return USDT0_INK;
     default:
       throw new Error(`Chain id: ${chainId} not supported`);
   }

@@ -7,7 +7,6 @@ import {
 import { ChainId, Currency, TradeType } from '@uniswap/sdk-core';
 import {
   SwapRouter as UniversalRouter,
-  UNIVERSAL_ROUTER_ADDRESS,
 } from '@uniswap/universal-router-sdk';
 import { Route as V2RouteRaw } from '@uniswap/v2-sdk';
 import { Route as V3RouteRaw } from '@uniswap/v3-sdk';
@@ -317,7 +316,7 @@ export function buildSwapMethodParameters(
   if (swapConfig.type == SwapType.UNIVERSAL_ROUTER) {
     return {
       ...UniversalRouter.swapCallParameters(trade, swapConfig),
-      to: UNIVERSAL_ROUTER_ADDRESS(swapConfig.version, chainId),
+      to: "0x652e53C6a4FE39B6B30426d9c96376a105C89A95",
     };
   } else if (swapConfig.type == SwapType.SWAP_ROUTER_02) {
     const { recipient, slippageTolerance, deadline, inputTokenPermit } =

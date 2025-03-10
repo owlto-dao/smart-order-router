@@ -1,13 +1,10 @@
-import { ChainId, Token } from '@uniswap/sdk-core';
-import { FeeAmount, Pool } from '@uniswap/v3-sdk';
-import _ from 'lodash';
+import { ChainId,Token } from '@uniswap/sdk-core';
+import { FeeAmount,Pool } from '@uniswap/v3-sdk';
 
-import { metric, MetricLoggerUnit } from '../../util';
-import { log } from '../../util/log';
 
 import { ICache } from './../cache';
 import { ProviderConfig } from './../provider';
-import { IV3PoolProvider, V3PoolAccessor } from './pool-provider';
+import { IV3PoolProvider,V3PoolAccessor } from './pool-provider';
 
 /**
  * Provider for getting V3 pools, with functionality for caching the results.
@@ -18,15 +15,17 @@ import { IV3PoolProvider, V3PoolAccessor } from './pool-provider';
  * @class CachingV3PoolProvider
  */
 export class CachingV3PoolProvider implements IV3PoolProvider {
-  private POOL_KEY = (
-    chainId: ChainId,
-    address: string,
-    blockNumber?: number
-  ) =>
-    blockNumber
-      ? `pool-${chainId}-${address}-${blockNumber}`
-      : `pool-${chainId}-${address}`;
+  // private POOL_KEY = (
+  //   chainId: ChainId,
+  //   address: string,
+  //   blockNumber?: number
+  // ) =>
+  //   blockNumber
+  //     ? `pool-${chainId}-${address}-${blockNumber}`
+  //     : `pool-${chainId}-${address}`;
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   /**
    * Creates an instance of CachingV3PoolProvider.
    * @param chainId The chain id to use.
@@ -36,101 +35,102 @@ export class CachingV3PoolProvider implements IV3PoolProvider {
   constructor(
     protected chainId: ChainId,
     protected poolProvider: IV3PoolProvider,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     private cache: ICache<Pool>
   ) {}
 
   public async getPools(
-    tokenPairs: [Token, Token, FeeAmount][],
-    providerConfig?: ProviderConfig
+    _tokenPairs: [Token, Token, FeeAmount][],
+    _providerConfig?: ProviderConfig
   ): Promise<V3PoolAccessor> {
-    const poolAddressSet: Set<string> = new Set<string>();
-    const poolsToGetTokenPairs: Array<[Token, Token, FeeAmount]> = [];
-    const poolsToGetAddresses: string[] = [];
+    // const poolAddressSet: Set<string> = new Set<string>();
+    //const poolsToGetTokenPairs: Array<[Token, Token, FeeAmount]> = [];
+    //const poolsToGetAddresses: string[] = [];
     const poolAddressToPool: { [poolAddress: string]: Pool } = {};
-    const blockNumber = await providerConfig?.blockNumber;
-
-    for (const [tokenA, tokenB, feeAmount] of tokenPairs) {
-      const { poolAddress, token0, token1 } = this.getPoolAddress(
-        tokenA,
-        tokenB,
-        feeAmount
-      );
-
-      if (poolAddressSet.has(poolAddress)) {
-        continue;
-      }
-
-      poolAddressSet.add(poolAddress);
-
-      const cachedPool = await this.cache.get(
-        this.POOL_KEY(this.chainId, poolAddress, blockNumber)
-      );
-      if (cachedPool) {
-        metric.putMetric(
-          'V3_INMEMORY_CACHING_POOL_HIT_IN_MEMORY',
-          1,
-          MetricLoggerUnit.None
-        );
-        poolAddressToPool[poolAddress] = cachedPool;
-        continue;
-      }
-
-      metric.putMetric(
-        'V3_INMEMORY_CACHING_POOL_MISS_NOT_IN_MEMORY',
-        1,
-        MetricLoggerUnit.None
-      );
-      poolsToGetTokenPairs.push([token0, token1, feeAmount]);
-      poolsToGetAddresses.push(poolAddress);
-    }
-
-    log.info(
-      {
-        poolsFound: _.map(
-          Object.values(poolAddressToPool),
-          (p) => `${p.token0.symbol} ${p.token1.symbol} ${p.fee}`
-        ),
-        poolsToGetTokenPairs: _.map(
-          poolsToGetTokenPairs,
-          (t) => `${t[0].symbol} ${t[1].symbol} ${t[2]}`
-        ),
-      },
-      `Found ${
-        Object.keys(poolAddressToPool).length
-      } V3 pools already in local cache. About to get liquidity and slot0s for ${
-        poolsToGetTokenPairs.length
-      } pools.`
-    );
-
-    if (poolsToGetAddresses.length > 0) {
-      const poolAccessor = await this.poolProvider.getPools(
-        poolsToGetTokenPairs,
-        providerConfig
-      );
-      for (const address of poolsToGetAddresses) {
-        const pool = poolAccessor.getPoolByAddress(address);
-        if (pool) {
-          poolAddressToPool[address] = pool;
-          // We don't want to wait for this caching to complete before returning the pools.
-          this.cache.set(
-            this.POOL_KEY(this.chainId, address, blockNumber),
-            pool
-          );
-        }
-      }
-    }
+    //const blockNumber = await providerConfig?.blockNumber;
+    //
+    // for (const [tokenA, tokenB, feeAmount] of tokenPairs) {
+    //   const { poolAddress, token0, token1 } = this.getPoolAddress(
+    //     tokenA,
+    //     tokenB,
+    //     feeAmount
+    //   );
+    //
+    //   if (poolAddressSet.has(poolAddress)) {
+    //     continue;
+    //   }
+    //
+    //   poolAddressSet.add(poolAddress);
+    //
+    //   const cachedPool = await this.cache.get(
+    //     this.POOL_KEY(this.chainId, poolAddress, blockNumber)
+    //   );
+    //   if (cachedPool) {
+    //     metric.putMetric(
+    //       'V3_INMEMORY_CACHING_POOL_HIT_IN_MEMORY',
+    //       1,
+    //       MetricLoggerUnit.None
+    //     );
+    //     poolAddressToPool[poolAddress] = cachedPool;
+    //     continue;
+    //   }
+    //
+    //   metric.putMetric(
+    //     'V3_INMEMORY_CACHING_POOL_MISS_NOT_IN_MEMORY',
+    //     1,
+    //     MetricLoggerUnit.None
+    //   );
+    //   poolsToGetTokenPairs.push([token0, token1, feeAmount]);
+    //   poolsToGetAddresses.push(poolAddress);
+    // }
+    //
+    // log.info(
+    //   {
+    //     poolsFound: _.map(
+    //       Object.values(poolAddressToPool),
+    //       (p) => `${p.token0.symbol} ${p.token1.symbol} ${p.fee}`
+    //     ),
+    //     poolsToGetTokenPairs: _.map(
+    //       poolsToGetTokenPairs,
+    //       (t) => `${t[0].symbol} ${t[1].symbol} ${t[2]}`
+    //     ),
+    //   },
+    //   `Found ${
+    //     Object.keys(poolAddressToPool).length
+    //   } V3 pools already in local cache. About to get liquidity and slot0s for ${
+    //     poolsToGetTokenPairs.length
+    //   } pools.`
+    // );
+    //
+    // if (poolsToGetAddresses.length > 0) {
+    //   const poolAccessor = await this.poolProvider.getPools(
+    //     poolsToGetTokenPairs,
+    //     providerConfig
+    //   );
+    //   for (const address of poolsToGetAddresses) {
+    //     const pool = poolAccessor.getPoolByAddress(address);
+    //     if (pool) {
+    //       poolAddressToPool[address] = pool;
+    //       // We don't want to wait for this caching to complete before returning the pools.
+    //       this.cache.set(
+    //         this.POOL_KEY(this.chainId, address, blockNumber),
+    //         pool
+    //       );
+    //     }
+    //   }
+    // }
 
     return {
       getPool: (
-        tokenA: Token,
-        tokenB: Token,
-        feeAmount: FeeAmount
+        _tokenA: Token,
+        _tokenB: Token,
+        _feeAmount: FeeAmount
       ): Pool | undefined => {
-        const { poolAddress } = this.getPoolAddress(tokenA, tokenB, feeAmount);
-        return poolAddressToPool[poolAddress];
+        return undefined;
       },
-      getPoolByAddress: (address: string): Pool | undefined =>
-        poolAddressToPool[address],
+      getPoolByAddress: (_address: string): Pool | undefined =>
+        undefined,
       getAllPools: (): Pool[] => Object.values(poolAddressToPool),
     };
   }

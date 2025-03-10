@@ -206,6 +206,8 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.BASE_SEPOLIA]!,
     USDC_BASE_SEPOLIA,
   ],
+  [ChainId.INK]: [
+  ]
 };
 
 /**

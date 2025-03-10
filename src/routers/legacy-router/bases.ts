@@ -27,7 +27,7 @@ import {
   WBTC_WORLDCHAIN,
   WLD_WORLDCHAIN,
   WMATIC_POLYGON,
-  WMATIC_POLYGON_MUMBAI,
+  WMATIC_POLYGON_MUMBAI, WETH_INK, USDT0_INK
 } from '../../providers/token-provider';
 import { WRAPPED_NATIVE_CURRENCY } from '../../util/chains';
 
@@ -115,6 +115,10 @@ export const BASES_TO_CHECK_TRADES_AGAINST = (
       WRAPPED_NATIVE_CURRENCY[ChainId.BASE_SEPOLIA]!,
       USDC_BASE_SEPOLIA,
     ],
+    [ChainId.INK]: [
+      WETH_INK,
+      USDT0_INK,
+    ]
   };
 };
 

@@ -45,7 +45,7 @@ import {
   USDC_POLYGON,
   USDC_SEPOLIA,
   USDC_UNICHAIN,
-  USDC_WORLDCHAIN,
+  USDC_WORLDCHAIN, USDT0_INK,
   USDT_ARBITRUM,
   USDT_BNB,
   USDT_MAINNET,
@@ -62,7 +62,7 @@ import {
   WBTC_WORLDCHAIN,
   WLD_WORLDCHAIN,
   WMATIC_POLYGON,
-  WMATIC_POLYGON_MUMBAI,
+  WMATIC_POLYGON_MUMBAI
 } from './token-provider';
 
 // These tokens will added to the Token cache on initialization.
@@ -201,6 +201,9 @@ export const CACHE_SEED_TOKENS: {
     USDC: USDC_UNICHAIN,
     WETH: WRAPPED_NATIVE_CURRENCY[ChainId.UNICHAIN],
   },
+  [ChainId.INK]: {
+    USDT: USDT0_INK,
+  }
   // Currently we do not have providers for Moonbeam mainnet or Gnosis testnet
 };
 

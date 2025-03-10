@@ -15,6 +15,7 @@ export const DEFAULT_BLOCKS_TO_LIVE: { [chain in ChainId]: number } = {
   [ChainId.BASE_SEPOLIA]: 1800,
   [ChainId.ZORA_SEPOLIA]: 1800,
   [ChainId.BLAST]: 1800,
+  [ChainId.INK]: 1800,
   // Note: Experiment with longer TTL
   // (12 hours) / (2 seconds) = 21600
   [ChainId.WORLDCHAIN]: 21600,

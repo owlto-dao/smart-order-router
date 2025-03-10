@@ -52,7 +52,7 @@ import {
   WETH_POLYGON,
   WLD_WORLDCHAIN,
   WMATIC_POLYGON,
-  WSTETH_MAINNET,
+  WSTETH_MAINNET, WETH_INK, USDT0_INK
 } from './token-provider';
 import { V3SubgraphPool } from './v3/subgraph-provider';
 
@@ -180,6 +180,11 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.MONAD_TESTNET]!,
     USDT_MONAD_TESTNET,
   ],
+  [ChainId.INK]: [
+    nativeOnChain(ChainId.INK),
+    WETH_INK,
+    USDT0_INK,
+  ]
 };
 
 export interface IV3SubgraphProvider {

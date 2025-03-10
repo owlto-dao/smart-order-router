@@ -46,11 +46,11 @@ import {
   SwapRouterProvider,
   TokenPropertiesProvider,
   UniswapMulticallProvider,
-  URISubgraphProvider,
+  URISubgraphProvider, USDT0_INK,
   V2QuoteProvider,
   V2SubgraphProviderWithFallBacks,
   V3SubgraphProviderWithFallBacks,
-  V4SubgraphProviderWithFallBacks,
+  V4SubgraphProviderWithFallBacks
 } from '../../providers';
 import {
   CachingTokenListProvider,
@@ -1396,17 +1396,75 @@ export class AlphaRouter
       feeTakenOnTransfer,
     };
 
-    const {
-      v2GasModel: v2GasModel,
-      v3GasModel: v3GasModel,
-      v4GasModel: v4GasModel,
-      mixedRouteGasModel: mixedRouteGasModel,
-    } = await this.getGasModels(
-      gasPriceWei,
-      amount.currency.wrapped,
-      quoteCurrency.wrapped,
-      providerConfig
-    );
+    // console.log("alpha-router this.getGasModels")
+    // const {
+    //   mixedRouteGasModel: mixedRouteGasModel,
+    // } = await this.getGasModels(
+    //   gasPriceWei,
+    //   amount.currency.wrapped,
+    //   quoteCurrency.wrapped,
+    //   providerConfig
+    // );
+
+    const v2GasModel = {
+      estimateGasCost: function estimateGasCost(_routeWithValidQuote: V2RouteWithValidQuote): {
+        gasEstimate: BigNumber;
+        gasCostInToken: CurrencyAmount;
+        gasCostInUSD: CurrencyAmount;
+        gasCostInGasToken?: CurrencyAmount;
+      } {
+        return {
+          gasEstimate: BigNumber.from(0),
+          gasCostInToken: CurrencyAmount.fromRawAmount(USDT0_INK, 0),
+          gasCostInUSD: CurrencyAmount.fromRawAmount(USDT0_INK, 0),
+        }
+      }
+    } as IGasModel<V2RouteWithValidQuote>;
+
+    const v3GasModel = {
+      estimateGasCost: function estimateGasCost(_routeWithValidQuote: V3RouteWithValidQuote): {
+        gasEstimate: BigNumber;
+        gasCostInToken: CurrencyAmount;
+        gasCostInUSD: CurrencyAmount;
+        gasCostInGasToken?: CurrencyAmount;
+      } {
+        return {
+          gasEstimate: BigNumber.from(0),
+          gasCostInToken: CurrencyAmount.fromRawAmount(USDT0_INK, 0),
+          gasCostInUSD: CurrencyAmount.fromRawAmount(USDT0_INK, 0),
+        }
+      }
+    } as IGasModel<V3RouteWithValidQuote>;
+
+    const v4GasModel = {
+      estimateGasCost: function estimateGasCost(_routeWithValidQuote: V4RouteWithValidQuote): {
+        gasEstimate: BigNumber;
+        gasCostInToken: CurrencyAmount;
+        gasCostInUSD: CurrencyAmount;
+        gasCostInGasToken?: CurrencyAmount;
+      } {
+        return {
+          gasEstimate: BigNumber.from(0),
+          gasCostInToken: CurrencyAmount.fromRawAmount(USDT0_INK, 0),
+          gasCostInUSD: CurrencyAmount.fromRawAmount(USDT0_INK, 0),
+        }
+      }
+    } as IGasModel<V4RouteWithValidQuote>;
+
+    const mixedRouteGasModel = {
+      estimateGasCost: function estimateGasCost(_routeWithValidQuote: MixedRouteWithValidQuote): {
+        gasEstimate: BigNumber;
+        gasCostInToken: CurrencyAmount;
+        gasCostInUSD: CurrencyAmount;
+        gasCostInGasToken?: CurrencyAmount;
+      } {
+        return {
+          gasEstimate: BigNumber.from(0),
+          gasCostInToken: CurrencyAmount.fromRawAmount(USDT0_INK, 0),
+          gasCostInUSD: CurrencyAmount.fromRawAmount(USDT0_INK, 0),
+        }
+      }
+    } as IGasModel<MixedRouteWithValidQuote>;
 
     // Create a Set to sanitize the protocols input, a Set of undefined becomes an empty set,
     // Then create an Array from the values of that Set.
@@ -2697,6 +2755,8 @@ export class AlphaRouter
     return gasPriceWei;
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   private async getGasModels(
     gasPriceWei: BigNumber,
     amountToken: Token,

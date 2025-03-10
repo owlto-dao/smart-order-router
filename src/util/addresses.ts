@@ -113,6 +113,7 @@ export const NEW_QUOTER_V2_ADDRESSES: AddressMap = {
   [ChainId.BASE_SEPOLIA]:
     CHAIN_TO_ADDRESSES_MAP[ChainId.BASE_SEPOLIA].quoterAddress,
   [ChainId.UNICHAIN]: CHAIN_TO_ADDRESSES_MAP[ChainId.UNICHAIN].quoterAddress, // TODO: deploy view-only-quoter to unichain
+  [ChainId.INK]: CHAIN_TO_ADDRESSES_MAP[ChainId.INK].quoterAddress,
 };
 
 export const PROTOCOL_V4_QUOTER_ADDRESSES: AddressMap = {
@@ -184,6 +185,7 @@ export const UNISWAP_MULTICALL_ADDRESSES: AddressMap = {
     CHAIN_TO_ADDRESSES_MAP[ChainId.BASE_SEPOLIA].multicallAddress,
   // TODO: Gnosis + Moonbeam contracts to be deployed
   [ChainId.UNICHAIN]: CHAIN_TO_ADDRESSES_MAP[ChainId.UNICHAIN].multicallAddress,
+  [ChainId.INK]: CHAIN_TO_ADDRESSES_MAP[ChainId.INK].multicallAddress,
 };
 
 export const SWAP_ROUTER_02_ADDRESSES = (chainId: number): string => {
@@ -382,6 +384,13 @@ export const WETH9: {
     'Wrapped Ether'
   ),
   [ChainId.UNICHAIN]: new Token(
+    ChainId.UNICHAIN,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.INK]: new Token(
     ChainId.UNICHAIN,
     '0x4200000000000000000000000000000000000006',
     18,

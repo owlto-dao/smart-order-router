@@ -1,5 +1,4 @@
 import { ChainId, Token } from '@uniswap/sdk-core';
-import { Pair } from '@uniswap/v2-sdk';
 import _ from 'lodash';
 
 import { WRAPPED_NATIVE_CURRENCY } from '../../util/chains';
@@ -50,11 +49,12 @@ import {
   WETH_POLYGON,
   WLD_WORLDCHAIN,
   WMATIC_POLYGON,
-  WSTETH_MAINNET,
+  WSTETH_MAINNET, WETH_INK, USDT0_INK
 } from '../token-provider';
 
 import { IV2SubgraphProvider, V2SubgraphPool } from './subgraph-provider';
-
+import { getCreate2Address } from 'ethers/lib/utils';
+import { keccak256, pack } from '@ethersproject/solidity';
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[];
 };
@@ -151,6 +151,10 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.BASE_SEPOLIA]!,
     USDC_BASE_SEPOLIA,
   ],
+  [ChainId.INK]: [
+    WETH_INK,
+    USDT0_INK,
+  ]
 };
 
 /**
@@ -202,8 +206,7 @@ export class StaticV2SubgraphProvider implements IV2SubgraphProvider {
 
     const subgraphPools: V2SubgraphPool[] = _(pairs)
       .map(([tokenA, tokenB]) => {
-        const poolAddress = Pair.getAddress(tokenA, tokenB);
-
+        const poolAddress = getV2PairAddress(tokenA, tokenB);
         if (poolAddressSet.has(poolAddress)) {
           return undefined;
         }
@@ -232,4 +235,28 @@ export class StaticV2SubgraphProvider implements IV2SubgraphProvider {
 
     return subgraphPools;
   }
+}
+
+
+// ink only
+export function getV2PairAddress(tokenA: Token, tokenB: Token): string {
+  const factoryAddress = "0x458C5d5B75ccBA22651D2C5b61cB1EA1e0b0f95D";
+  return computePairAddress({ factoryAddress, tokenA, tokenB })
+}
+
+export const computePairAddress = ({
+                                     factoryAddress,
+                                     tokenA,
+                                     tokenB,
+                                   }: {
+  factoryAddress: string
+  tokenA: Token
+  tokenB: Token
+}): string => {
+  const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
+  return getCreate2Address(
+    factoryAddress,
+    keccak256(['bytes'], [pack(['address', 'address'], [token0.address, token1.address])]),
+    "0xdb6150d8b7486220fb4136e079799d4c56bc5faffe4f942831eba66486f3262b", // ink v2
+  )
 }
